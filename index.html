@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DesignOrbit Ltd | Digital Solutions & IT Services</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: '#0B132B',    // Deep Midnight
+                        secondary: '#1C2541',  // Slate Blue
+                        accent: '#D4AF37',     // Muted Gold
+                        light: '#F8F9FA',      // Off-white
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Animations and Overrides */
+        body {
+            background-color: #F8F9FA;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Scroll Reveal Utility Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Delay utilities for staggered animations */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        /* Hero Canvas Overlay */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        /* Glassmorphism Header */
+        .glass-header {
+            background: rgba(11, 19, 43, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Service Card Hover */
+        .service-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .service-icon-wrapper {
+            transition: all 0.4s ease;
+        }
+        .service-card:hover .service-icon-wrapper {
+            background-color: #D4AF37;
+            color: #fff;
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-accent selection:text-white">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 glass-header text-white">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Logo Placeholder -->
+            <a href="#" class="flex items-center gap-2 group">
+               <img src="images/logo1.png" class="w-12 h-12 object-contain mix-blend-screen">
+                <span class="font-serif text-2xl font-bold tracking-wider">Design<span class="text-accent">Orbit</span></span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 items-center text-sm font-medium tracking-wide">
+                <a href="#about" class="hover:text-accent transition-colors">About</a>
+                <a href="#services" class="hover:text-accent transition-colors">Services</a>
+                <a href="#team" class="hover:text-accent transition-colors">Leadership & Team</a>
+                <a href="#contact" class="px-5 py-2 border border-accent text-accent hover:bg-accent hover:text-white rounded-full transition-all duration-300">Get in Touch</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-2xl focus:outline-none text-white">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-primary/95 backdrop-blur-md border-t border-gray-800">
+            <div class="flex flex-col p-6 space-y-4 text-center">
+                <a href="#about" class="mobile-link block text-lg hover:text-accent transition-colors">About</a>
+                <a href="#services" class="mobile-link block text-lg hover:text-accent transition-colors">Services</a>
+                <a href="#team" class="mobile-link block text-lg hover:text-accent transition-colors">Team</a>
+                <a href="#contact" class="mobile-link inline-block px-5 py-3 mt-4 border border-accent text-accent hover:bg-accent hover:text-white rounded-full transition-all">Get in Touch</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="relative min-h-screen flex items-center justify-center bg-primary overflow-hidden pt-20">
+        <!-- Interactive Canvas Background -->
+        <canvas id="hero-canvas"></canvas>
+        
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto mt-16">
+            <p class="text-accent font-medium tracking-[0.2em] uppercase text-sm mb-4 reveal">UK-Based Technology & Digital Solutions</p>
+            <h1 class="text-5xl md:text-7xl font-serif font-bold text-white leading-tight mb-8 reveal delay-100">
+                Scaling Businesses <br> efficiently in the <span class="text-gradient">Digital Age</span>.
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light reveal delay-200">
+                Delivering high-quality IT services, custom web development, and cloud-based infrastructure support tailored for modern business needs.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 reveal delay-300">
+                <a href="#services" class="px-8 py-4 bg-accent text-primary font-semibold rounded-full hover:bg-white transition-colors shadow-[0_0_20px_rgba(212,175,55,0.3)]">Explore Solutions</a>
+                <a href="#about" class="px-8 py-4 bg-transparent border border-white text-white font-semibold rounded-full hover:bg-white/10 transition-colors">Discover Our Vision</a>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce text-gray-400">
+            <span class="text-xs uppercase tracking-widest mb-2">Scroll</span>
+            <i class="fa-solid fa-arrow-down"></i>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="reveal-left">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Modern Office Infrastructure" class="rounded-lg shadow-2xl z-10 relative">
+                        <!-- Decorative element -->
+                        <div class="absolute -bottom-6 -right-6 w-full h-full border-2 border-accent rounded-lg -z-0"></div>
+                    </div>
+                </div>
+                
+                <div class="reveal-right">
+                    <h2 class="text-sm text-accent font-bold tracking-widest uppercase mb-2">Who We Are</h2>
+                    <h3 class="text-4xl font-serif font-bold text-primary mb-6">Built for reliability. Driven by innovation.</h3>
+                    
+                    <div class="space-y-4 text-gray-600 font-light leading-relaxed">
+                        <p>
+                            <strong>DesignOrbit Ltd</strong> is a UK-based technology and digital solutions company focused on delivering high-quality IT services, web development, and business infrastructure support.
+                        </p>
+                        <p>
+                            Founded with a vision to help businesses scale efficiently in the digital age, DesignOrbit specialises in network administration, custom web application development, and cloud-based solutions including Google Workspace integration and support.
+                        </p>
+                        <p>
+                            We work closely with startups and growing businesses to build reliable systems, improve operational efficiency, and create tailored digital products that meet modern business needs.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-8 flex items-center gap-4 text-primary font-medium">
+                        <i class="fa-solid fa-check-circle text-accent text-xl"></i>
+                        <span>Professionalism & Innovation</span>
+                    </div>
+                    <div class="mt-3 flex items-center gap-4 text-primary font-medium">
+                        <i class="fa-solid fa-check-circle text-accent text-xl"></i>
+                        <span>Practical solutions driving real results</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 bg-light">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-sm text-accent font-bold tracking-widest uppercase mb-2">Our Expertise</h2>
+                <h3 class="text-4xl font-serif font-bold text-primary mb-4">Tailored Digital Products & Support</h3>
+                <p class="text-gray-600">We provide a comprehensive suite of digital solutions designed to optimize your operations and elevate your digital presence.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 service-card reveal delay-100">
+                    <div class="service-icon-wrapper w-14 h-14 rounded-lg bg-blue-50 text-secondary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Custom Web Apps</h4>
+                    <p class="text-gray-600 text-sm leading-relaxed">Tailored web application development focusing on scalability, user experience, and modern frameworks.</p>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 service-card reveal delay-200">
+                    <div class="service-icon-wrapper w-14 h-14 rounded-lg bg-blue-50 text-secondary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Network Admin</h4>
+                    <p class="text-gray-600 text-sm leading-relaxed">Robust network administration to ensure your business infrastructure is secure, fast, and continuously reliable.</p>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 service-card reveal delay-300">
+                    <div class="service-icon-wrapper w-14 h-14 rounded-lg bg-blue-50 text-secondary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Cloud Solutions</h4>
+                    <p class="text-gray-600 text-sm leading-relaxed">Seamless cloud migrations and Google Workspace integration to boost team collaboration and efficiency.</p>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 service-card reveal delay-400">
+                    <div class="service-icon-wrapper w-14 h-14 rounded-lg bg-blue-50 text-secondary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">IT Infrastructure</h4>
+                    <p class="text-gray-600 text-sm leading-relaxed">Comprehensive business infrastructure support to keep your day-to-day operations running without technical hitches.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership & Team Section -->
+    <section id="team" class="py-24 bg-primary text-white relative overflow-hidden">
+        <!-- Abstract background shapes -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-accent rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-sm text-accent font-bold tracking-widest uppercase mb-2">Our People</h2>
+                <h3 class="text-4xl font-serif font-bold mb-4">Leadership & Team</h3>
+                <p class="text-gray-300">Guided by expertise, driven by a passion for problem-solving.</p>
+            </div>
+
+            <!-- Founder Feature -->
+            <div class="bg-secondary/50 border border-gray-700 rounded-2xl p-8 md:p-12 backdrop-blur-sm mb-16 reveal">
+                <div class="flex flex-col md:flex-row gap-10 items-center">
+                    <div class="w-full md:w-1/3 flex justify-center">
+                        <div class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-accent shadow-2xl">
+                            <!-- Founder Image Placeholder -->
+                            <img src="images/ceo.jpg" alt="Godsmind Egwabor" class="w-full h-full object-cover object-top">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <h4 class="text-3xl font-serif font-bold text-white mb-1">Godsmind Egwabor</h4>
+                        <p class="text-accent font-medium mb-6 uppercase tracking-wider text-sm">Founder & CEO</p>
+                        
+                        <div class="space-y-4 text-gray-300 font-light text-sm md:text-base">
+                            <p>
+                                Godsmind Egwabor is the founder of DesignOrbit Ltd, a UK-based digital solutions company focused on helping businesses grow through technology.
+                            </p>
+                            <p>
+                                With an academic background in Economics, Godsmind combines analytical thinking with practical technical skills. He has further developed his expertise through professional certifications in web development, graphic design, and mobile application development.
+                            </p>
+                            <p>
+                                Driven by a passion for innovation and problem-solving, he specialises in building digital products, supporting business infrastructure, and delivering scalable solutions tailored to modern business needs. Through DesignOrbit, Godsmind is committed to providing reliable, efficient, and forward-thinking digital services to startups and growing businesses.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Placeholders -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <!-- Team Member 1 -->
+                <div class="bg-secondary/30 border border-gray-800 rounded-xl p-6 text-center hover:bg-secondary/50 transition-colors reveal delay-100">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-gray-700 mb-4 overflow-hidden">
+                        <img src="images/coo.jpg" alt="Team Member" class="w-full h-full object-cover object-top opacity-80 grayscale hover:grayscale-0 transition-all">
+                    </div>
+                    <h5 class="text-lg font-bold text-white">Noyase Ithohan</h5>
+                    <p class="text-gray-400 text-sm mb-3">Authorising Officer</p>
+                    <div class="flex justify-center gap-3 text-gray-500">
+                        <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="#" class="hover:text-white transition-colors"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                </div>
+
+                <!-- Team Member 2 -->
+                <div class="bg-secondary/30 border border-gray-800 rounded-xl p-6 text-center hover:bg-secondary/50 transition-colors reveal delay-200">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-gray-700 mb-4 overflow-hidden">
+                        <img src="images/ceo.jpg" alt="Team Member" class="w-full h-full object-cover object-top opacity-80 grayscale hover:grayscale-0 transition-all">
+                    </div>
+                    <h5 class="text-lg font-bold text-white">Godsmind Egwabor</h5>
+                    <p class="text-gray-400 text-sm mb-3">Director</p>
+                    <div class="flex justify-center gap-3 text-gray-500">
+                        <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="#" class="hover:text-white transition-colors"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                </div>
+
+                <!-- Join the team -->
+                <div class="bg-transparent border-2 border-dashed border-gray-700 rounded-xl p-6 text-center flex flex-col items-center justify-center hover:border-accent hover:text-accent transition-colors cursor-pointer reveal delay-300 group">
+                    <div class="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
+                        <i class="fa-solid fa-plus text-2xl"></i>
+                    </div>
+                    <a href="#contact" class="text-lg font-bold">Join Our Team</a>
+                    <p class="text-sm opacity-70">We are always looking for talent.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div class="reveal-left">
+                    <h2 class="text-sm text-accent font-bold tracking-widest uppercase mb-2">Get in Touch</h2>
+                    <h3 class="text-4xl font-serif font-bold text-primary mb-6">Let's build reliable systems together.</h3>
+                    <p class="text-gray-600 mb-10 font-light">Whether you are a startup looking for scalable infrastructure or a growing business needing custom digital products, we are here to help.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-light flex items-center justify-center text-primary flex-shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-primary">Location</h5>
+                                <p class="text-gray-600 text-sm">58 woodhurst Road</p>
+                                <p class="text-gray-600 text-sm">Post code:SE2 0HE</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-light flex items-center justify-center text-primary flex-shrink-0">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-primary">Email Us</h5>
+                                <p class="text-gray-600 text-sm">contact@designorbit.co.uk</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-light flex items-center justify-center text-primary flex-shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-primary">Call Us</h5>
+                                <p class="text-gray-600 text-sm">+44 7402 806962</p>
+                                <p class="text-gray-600 text-sm">+4407903012843</p>
+                                <p class="text-gray-600 text-sm">+44 7438 652678</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-right">
+                   <form action="https://formspree.io/f/abcdxyz" method="POST" class="bg-light p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                <input type="text" name="name"class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all" placeholder="John Doe" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                <input type="email" name="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all" placeholder="john@company.com" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">How can we help?</label>
+                                <textarea rows="4" name="message" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all" placeholder="Tell us about your project..." required></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-secondary transition-colors shadow-lg shadow-primary/30">
+                                Send Message <i class="fa-solid fa-paper-plane ml-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary pt-16 pb-8 border-t border-gray-800 text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <a href="#" class="flex items-center gap-2 text-white">
+                                   <img src="images/logo1.png" class="w-12 h-12 object-contain mix-blend-screen">
+                    <span class="font-serif text-xl font-bold tracking-wider">Design<span class="text-accent">Orbit</span></span>
+                </a>
+                <div class="flex space-x-6">
+                    <a href="https://www.instagram.com/designorbit.uk?igsh=anU5YjM0bWVkaXJ0&utm_source=qr" class="hover:text-white transition-colors"><i class="fa-brands fa-instagram text-xl"></i></a>
+                    
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs">
+                <p>&copy; 2026 DesignOrbit Ltd. All rights reserved.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Animations and Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. Mobile Menu Toggle ---
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const links = document.querySelectorAll('.mobile-link');
+            const icon = btn.querySelector('i');
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                if(menu.classList.contains('hidden')){
+                    icon.classList.remove('fa-xmark');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-xmark');
+                }
+            });
+
+            // Close mobile menu on link click
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                    icon.classList.remove('fa-xmark');
+                    icon.classList.add('fa-bars');
+                });
+            });
+
+            // --- 2. Scroll Reveal Animations using Intersection Observer ---
+            const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+            
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+
+            // --- 3. Interactive Hero Canvas Animation (Network/Orbit Nodes) ---
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                initParticles();
+            }
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.radius = Math.random() * 2 + 1;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Bounce off edges
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(212, 175, 55, 0.4)'; // Muted Gold particles
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                const numParticles = Math.min(width / 10, 100); // Responsive particle count
+                for (let i = 0; i < numParticles; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, width, height);
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+
+                    // Connect nearby particles
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist / 1500})`; // Subtle connecting lines
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animateParticles);
+            }
+
+            // Initialize canvas and handle resize
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            animateParticles();
+
+            // --- 4. Navbar Scroll Effect ---
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('shadow-lg');
+                    navbar.classList.replace('py-4', 'py-2');
+                } else {
+                    navbar.classList.remove('shadow-lg');
+                    navbar.classList.replace('py-2', 'py-4');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

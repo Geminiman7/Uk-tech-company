@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://designorbit.co.uk/sitemap.xml
